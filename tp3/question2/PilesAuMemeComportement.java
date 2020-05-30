@@ -172,5 +172,83 @@ public class PilesAuMemeComportement extends junit.framework.TestCase {
         assertEquals(" diffÃ©rence  sur la taille() ?? ",p3.taille(), p4.taille());
 
     }
+
+    /**
+     * Toutes les méthodes sont testées ci-dessus à l'exception de 
+     * equals et hashCode
+     */ 
+
+    public void test_egalite() throws Exception {
+        p1.empiler(907);
+        p1.empiler(908);
+        p1.empiler(909);
+        p1.empiler(910);
+        p1.empiler(911);
+        p1.empiler(912);
+
+        p2.empiler(907);
+        p2.empiler(908);
+        p2.empiler(909);
+        p2.empiler(910);
+        p2.empiler(911);
+        p2.empiler(912);
+
+        p3.empiler(907);
+        p3.empiler(908);
+        p3.empiler(909);
+        p3.empiler(910);
+        p3.empiler(911);
+        p3.empiler(912);
+
+        p4.empiler(907);
+        p4.empiler(908);
+        p4.empiler(909);
+        p4.empiler(910);
+        p4.empiler(911);
+        p4.empiler(912);
+
+        assertEquals ("p1 et p1 sont égales ?", true, p1.equals(p1));
+        assertEquals ("p2 et p2 sont égales ?", true, p2.equals(p2));
+        assertEquals ("p3 et p3 sont égales ?", true, p3.equals(p3));
+        assertEquals ("p4 et p4 sont égales ?", true, p4.equals(p4));
+
+        assertEquals ("p1 et p2 sont égales ?", true, p1.equals(p2));
+        assertEquals ("p1 et p3 sont égales ?", true, p1.equals(p3));
+        assertEquals ("p1 et p4 sont égales ?", true, p1.equals(p4));
+        assertEquals ("p2 et p3 sont égales ?", true, p2.equals(p3));
+        assertEquals ("p2 et p4 sont égales ?", true, p2.equals(p4));
+        assertEquals ("p3 et p4 sont égales ?", true, p3.equals(p4));
+    }
+
+    public void test_hachage() throws Exception {
+        /**
+         * Si deux piles sont égaux selon la méthode equals(),
+         * alors leur code de hachage doit être le même.
+         */
+        
+        p1.empiler(33);
+        p1.empiler(34);
+        p1.empiler(35);
+
+        p2.empiler(33);
+        p2.empiler(34);
+        p2.empiler(35);
+
+        p3.empiler(33);
+        p3.empiler(34);
+        p3.empiler(35);
+
+        p4.empiler(33);
+        p4.empiler(34);
+        p4.empiler(35);
+
+        assertEquals ("Hachages de p1 et p2 sont égales ?", true, 
+            p1.hashCode() == p2.hashCode());
+        assertEquals ("Hachages de p2 et p3 sont égales ?", true, 
+            p2.hashCode() == p3.hashCode());
+        assertEquals ("Hachages de p3 et p4 sont égales ?", true, 
+            p3.hashCode() == p4.hashCode());
+    }
+
 }
 

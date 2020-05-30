@@ -6,8 +6,8 @@ import question1.PileVideException;
 /**
  * A remplacer en partie par votre classe Pile de la question 1.
  * 
- * @author (votre nom)
- * @version (un num√©ro de version ou une date)
+ * @author Agatha khairallah
+ * @version 1.0
  */
 public class Pile implements PileI {
 
@@ -15,51 +15,216 @@ public class Pile implements PileI {
     private int ptr;
 
     public Pile(int taille) {
-        // traiter le cas <=0
-        // a completer
+        if (taille <= 0)
+            taille = CAPACITE_PAR_DEFAUT;
+        this.zone = new Object[taille];
+        this.ptr = 0;
     }
 
     public Pile() {
-        this(0);
+        this(CAPACITE_PAR_DEFAUT);
     }
 
     public void empiler(Object o) throws PilePleineException {
-        // a completer
+        if (estPleine())
+            throw new PilePleineException();
+        this.zone[this.ptr] = o;
+        this.ptr++;
     }
 
     public Object depiler() throws PileVideException {
-        // a completer
-        return null;
+        // L'empilation se fait en fin du tableau, alors on dÈpile
+        // de la fin du tableau
+        if (estVide())
+            throw new PileVideException();
+        this.ptr--;
+        return this.zone[ptr];
     }
 
     public Object sommet() throws PileVideException {
-        // a completer
-        return null;
+        // L'empilation se fait en fin du tableau, alors le sommet
+        // de la pile correspond au dernier ÈlÈment du tableau
+        if (estVide())
+            throw new PileVideException();
+        return this.zone[this.ptr - 1];
     }
 
     public int capacite() {
-        // a completer
-        return -1;
+        return this.zone.length;
     }
 
     public int taille() {
-        // a completer
-        return -1;
+        return this.ptr;
     }
 
     public boolean estVide() {
-        // a completer
-        return false;
+        return ptr == 0;// return this.taille() == 0;
     }
 
     public boolean estPleine() {
-        // a completer
-        return false;
+        return ptr == zone.length;
     }
 
     public boolean equals(Object o) {
-        // a completer
-        return false;
+        /**
+         * Il existe deux mÈthodes:
+         * 1- Une simple comparaison des .toString() des deux piles
+         * 2- En comparant membre par membre
+         */
+        /**
+         * PremiËre mÈthode:
+         * if (o == null)
+         *      return false;
+         * if (!(o instanceof PileI))
+         *      return false;
+         * PileI secondPile = (PileI)o;
+         * if (this == secondPile)
+         *      return true;
+         * if (this.taille() != secondPile.taille())
+         *      return false;
+         * if (this.capacite() != secondPile.capacite())
+         *      return false;
+         * if (secondPile.taille() == 0)
+         *      return true;
+         * if(this.toString().equals(secondPile.toString())) 
+         *      return true;
+         * return false;
+         */
+
+        // DeuxiËme mÈthode:
+
+        // VÈrifier que o n'est pas null 
+        if (o == null)
+            return false;
+
+        // VÈrifier que o est une instance d'une classe implÈmentant PileI
+        if (!(o instanceof PileI))
+            return false;
+        PileI secondPile = (PileI)o;
+
+        /**
+         * VÈrifier si o reprÈsente la mÍme instance sur laquelle
+         * on teste l'ÈgalitÈ
+         */ 
+        if (this == secondPile)
+            return true;
+            
+        // Deux piles de tailles diffÈrentes ne sont pas Ègales
+        if (this.taille() != secondPile.taille())
+            return false;
+
+        // Deux piles de capacitÈs diffÈrentes ne sont pas Ègales
+        if (this.capacite() != secondPile.capacite())
+            return false;
+
+        /**
+         * Afin d'Èconomiser un long calcul, deux piles vides sont
+         * toujours Ègales
+         * On peut tester si this.taille() == 0 ou mÍme si 
+         * secondPile.taille() == 0 car elles sont Ègales
+         */ 
+        if (secondPile.taille() == 0)
+            return true;
+
+        /**
+         * L'ordre des ÈlÈments est important 
+         * Ici un problËme a lieu: la fonction sommet() retourne
+         * le dernier ÈlÈment de la secondPile qui sera testÈ ‡ chaque 
+         * parcours de la boucle for, donc il faut l'enlever ‡ la
+         * fin de chaque parcours. Afin de rÈsoudre ce 
+         * problËme on peut utiliser une pile temporaire dans 
+         * laquelle on empile ‡ chaque fois le sommet() dÈj‡ testÈ
+         */ 
+
+        Pile temp = new Pile (secondPile.taille()); // ou this.taille(), elles sont Ègales
+        boolean egales;
+
+        for (int i = this.taille() - 1; i >= 0; i -= 1){
+            try {
+                egales = false;
+
+                /**
+                 * // Si zone[i] ET secondPile.sommet() sont toutes les 
+                 * // deux nulles alors elles sont Ègales
+                 * // On pourrait Ècrire comme ci-dessous mais 
+                 * // l'inconvÈnient c'est que l'affectation de 
+                 * // la variable "egales" ‡ false est inutile 
+                 * // car elle est dÈj‡ affectÈe dËs l'entrÈe ‡ 
+                 * // la boucle for !
+                 * if(zone[i] == null && secondPile.sommet() != null) 
+                 *      egales = false;
+                 * else if(zone[i] != null && secondPile.sommet() == null) 
+                 *      egales = false; 
+                 * else if(zone[i] == null && secondPile.sommet() == null) 
+                 *      egales = true;
+                 */ 
+                if (zone[i] == null){ 
+                    if (secondPile.sommet() == null)
+                        egales = true;
+                }
+                else if (secondPile.sommet() == null){
+                    if (zone[i] == null)
+                        egales = true;
+                }
+                else if (zone[i].equals(secondPile.sommet()))
+                    egales = true;
+
+                /**
+                 * Si "egale = true" alors on enlËve l'ÈlÈment de
+                 * la pile initiale et on le met dans la pile temporaire
+                 */ 
+                if (egales) {
+                    Object tempElement = secondPile.depiler();
+                    temp.empiler(tempElement);
+                }
+                else {
+                    /**
+                     * S'il existe des ÈlÈments dans la pile 
+                     * temporaire, il faut les rendre ‡ la pile 
+                     * initiale
+                     */ 
+                    rendreElements(secondPile, temp);
+                    return egales;
+                }
+
+            } catch (PileVideException videExc){}
+            catch (PilePleineException pleineExc){}
+        }
+
+        /**
+         * Rendre les ÈlÈments de la pile temporaire ‡ la pile 
+         * initiale
+         */ 
+        rendreElements(secondPile, temp);
+        return true;
+    }
+
+    /**
+     * Rendre les ÈlÈments.
+     * 
+     * @param pile
+     *            la pile initiale
+     * @param temp
+     *            la pile contenant les ÈlÈments temporaires ‡ rendre         
+     */
+    public void rendreElements(PileI pile, PileI temp){
+        /**
+         * Attention: 
+         * La taille de temp doit Ítre dÈclarÈe
+         * en tant que variable. Elle ne peut pas Ítre mis
+         * dans la condition de la boucle for car celle-ci 
+         * diminue ‡ chaque parcours de la boucle for (ou 
+         * en d'autre terme: ‡ chaque appel ‡ la fonction 
+         * depiler())
+         */ 
+        int tempTaille = temp.taille();
+        for (int i = tempTaille; i > 0; i -=1){
+            try {
+                Object tempElement = temp.depiler();
+                pile.empiler(tempElement);
+            } catch (PileVideException videExc){}
+            catch (PilePleineException pleineExc){}
+        }
     }
 
     // fonction fournie
@@ -68,7 +233,15 @@ public class Pile implements PileI {
     }
 
     public String toString() {
-        // a completer
-        return null;
+        if (estVide())
+            return "[]";
+        StringBuffer sb = new StringBuffer("[");
+        for (int i = ptr - 1; i >= 0; i--) {
+            sb.append((zone[i] == null)? "NULL":zone[i].toString());
+            if (i > 0)
+                sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }
